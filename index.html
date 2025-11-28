@@ -1,188 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayRank Games</title>
-<style>
-* {margin:0; padding:0; box-sizing:border-box; font-family:sans-serif;}
-body {background:#f4f4f4; color:#333; line-height:1.6;}
-nav {display:flex; justify-content: space-between; align-items:center; background:#222; color:#fff; padding:10px 20px;}
-nav .logo {font-size:24px; font-weight:bold;}
-nav ul {list-style:none; display:flex; gap:15px;}
-nav ul li a {color:#fff; text-decoration:none;}
-.hero {padding:40px 20px; text-align:center; background:#333; color:#fff;}
-.hero input[type="text"] {padding:10px; width:80%; max-width:400px; margin-top:20px; border:none; border-radius:5px;}
-main {padding:20px;}
-section {margin-bottom:40px;}
-.game-card {background:#fff; margin-bottom:15px; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-.game-card h3 {margin-bottom:10px; display:flex; align-items:center;}
-.game-card h3 img {height:30px; margin-right:10px;}
-.rating, .avg-stars {margin-top:10px;}
-.star {font-size:20px; color:#ccc; cursor:pointer;}
-.star.selected {color:gold;}
-.star.avg {cursor:default;}
-footer {text-align:center; padding:20px; margin-top:40px; background:#222; color:#ddd;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayRank Games</title>
+
+    <style>
+        /* --- SPACE DARK THEME --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+        body {
+            background: #0d0f14;
+            color: #e0e3e7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(80,0,255,0.18), transparent 60%),
+                        radial-gradient(circle at 80% 70%, rgba(0,180,255,0.15), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #12141b;
+            color: #fff;
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+        }
+        nav .logo {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #7d53ff, #4cf8ff);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        nav ul li a {
+            color: #9fb4c9;
+            text-decoration: none;
+            transition: .2s;
+        }
+        nav ul li a:hover {
+            color: #ffffff;
+        }
+
+        .hero {
+            padding: 60px 20px;
+            text-align: center;
+            background: #12141b;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .hero h1 {
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #8b55ff, #4cf8ff);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .hero p {
+            opacity: .75;
+            font-size: 17px;
+            margin-top: 10px;
+        }
+        .hero input[type="text"] {
+            padding: 12px 18px;
+            width: 80%;
+            max-width: 430px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 10px;
+            background: #1b1e27;
+            color: #e0e3e7;
+            box-shadow: 0 0 12px rgba(120,75,255,0.3);
+            outline: none;
+            transition: 0.2s;
+        }
+
+        section h2 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #8b55ff, #4cf8ff);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .game-card {
+            background: #161921;
+            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 0 18px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.25s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(122,64,255,0.45);
+            outline: 2px solid rgba(122,64,255,0.12);
+        }
+
+        .game-card h3 {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+        }
+        .game-card h3 img {
+            height: 34px;
+            width: auto;
+        }
+
+        .star {
+            font-size: 22px;
+            margin-right: 3px;
+            color: #555c6b;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .star.selected {
+            color: gold;
+        }
+        .star.avg {
+            cursor: default;
+        }
+
+        .avg-stars {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            font-size: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            background: #12141b;
+            color: #9fb4c9;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+
+        main {
+            padding: 25px;
+        }
+        #search-results,
+        #picks-list {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+    </style>
 </head>
+
 <body>
-<nav>
-  <div class="logo">PlayRank Games</div>
-  <ul>
-    <li><a href="#picks">PlayRank Games Picks</a></li>
-  </ul>
-</nav>
 
-<header class="hero">
-  <h1>PlayRank Games — Rate Your Favorite Games</h1>
-  <p>Community-driven ratings for top games. Search for your favorites below.</p>
-  <input type="text" id="search" placeholder="Search Over 500 Games..." />
-</header>
+    <nav>
+        <div class="logo">PlayRank Games</div>
+        <ul>
+            <li><a href="#picks">Picks</a></li>
+        </ul>
+    </nav>
 
-<main>
-  <section id="search-results">
-    <!-- Search results appear here -->
-  </section>
+    <header class="hero">
+        <h1>Rate Your Favourite Games</h1>
+        <p>Search over 500+ games. Powered by community ratings.</p>
+        <input type="text" id="search" placeholder="Search games...">
+    </header>
 
-  <section id="picks">
-    <h2>PlayRank Games Picks</h2>
-    <!-- Top 10 picks rendered here -->
-  </section>
-</main>
+    <main>
+        <section id="search-results"></section>
 
-<footer>
-  &copy; 2025 PlayRank Games — Community Game Ratings
-</footer>
+        <section id="picks">
+            <h2>PlayRank Games Picks</h2>
+            <div id="picks-list"></div>
+        </section>
+    </main>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getDatabase, ref, runTransaction, onValue, off } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+    <footer>
+        © 2025 PlayRank Games — Community Game Ratings
+    </footer>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCElu0rPnRHfd3ocbzBCyvZcuCnjkz9-Xo",
-  authDomain: "playrank-games.firebaseapp.com",
-  projectId: "playrank-games",
-  storageBucket: "playrank-games.firebasestorage.app",
-  messagingSenderId: "856773881474",
-  appId: "1:856773881474:web:1f684733880bbbe96c4e9b",
-  measurementId: "G-39MPF1BWMC",
-  databaseURL: "https://playrank-games-default-rtdb.firebaseio.com/"
-};
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, runTransaction, onValue, off } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyCElu0rPnRHfd3ocbzBCyvZcuCnjkz9-Xo",
+            authDomain: "playrank-games.firebaseapp.com",
+            projectId: "playrank-games",
+            storageBucket: "playrank-games.firebasestorage.app",
+            messagingSenderId: "856773881474",
+            appId: "1:856773881474:web:1f684733880bbbe96c4e9b",
+            measurementId: "G-39MPF1BWMC",
+            databaseURL: "https://playrank-games-default-rtdb.firebaseio.com/"
+        };
 
-// Prevent multiple votes per device
-let votedLocal = JSON.parse(localStorage.getItem("votedLocal")) || {};
-function saveLocal() { localStorage.setItem("votedLocal", JSON.stringify(votedLocal)); }
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-// --- Game Arrays ---
-const picks = [
-  {name:"GTA 5", logo:"https://logos-world.net/wp-content/uploads/2021/02/GTA-5-Symbol.png"},
-  {name:"Minecraft", logo:"https://logos-world.net/wp-content/uploads/2020/04/Minecraft-Logo.png"},
-  {name:"Roblox", logo:"https://archive.org/download/app-icon-roblox/app-icon-roblox.png"},
-  {name:"Fifa 25", logo:"https://www.fifaultimateteam.it/wp-content/uploads/2024/07/cover-logo-black-fc-25.webp"},
-  {name:"War Thunder", logo:"https://www.vhv.rs/dpng/f/390-3904724_war-thunder-png.png"},
-  {name:"Geometry Dash", logo:"https://logos-world.net/wp-content/uploads/2022/05/Geometry-Dash-Logo.png"},
-  {name:"Among Us", logo:"https://logodix.com/logo/2207096.png"},
-  {name:"Mario Kart", logo:"https://logos-world.net/wp-content/uploads/2024/02/Mario-Kart-Logo-2005.png"},
-  {name:"Kingdom Hearts 3", logo:"https://purepng.com/public/uploads/large/purepng.com-kingdom-hearts-3-logokingdom-heartsgamefantasythreesquare-enixdisney-21528619495uvx4u.png"},
-  {name:"Super Smash Bros", logo:"https://logos-world.net/wp-content/uploads/2022/01/Super-Smash-Bros.-Logo-2014.png"}
-];
+        let votedLocal = JSON.parse(localStorage.getItem("votedLocal")) || {};
+        function saveLocal() {
+            localStorage.setItem("votedLocal", JSON.stringify(votedLocal));
+        }
 
-// --- FULL GAME LIST for search ---
-const allGames = [
-"Minecraft","Roblox","GTA V","Fifa 25","War Thunder","Geometry Dash","Among Us","Mario Kart","Kingdom Hearts 3","Super Smash Bros","Fortnite","Call of Duty: Warzone","Apex Legends","The Sims 4","Stardew Valley","Animal Crossing: New Horizons","Terraria","League of Legends","Valorant","Overwatch","PUBG","FIFA 23","Rocket League","Genshin Impact","The Witcher 3: Wild Hunt","Red Dead Redemption 2","Assassin's Creed Valhalla","Cyberpunk 2077","Fall Guys","Dead by Daylight","Phasmophobia","Subnautica","Baldur's Gate 3","Diablo IV","Diablo II","World of Warcraft","Hearthstone","Dota 2","Counter-Strike: Global Offensive","Team Fortress 2","Skyrim","Fallout 4","Fallout: New Vegas","Black Desert Online","Destiny 2","Monster Hunter: World","Elden Ring","Hollow Knight","Cuphead","Hades","Celeste","Ori and the Will of the Wisps","Undertale","Ark: Survival Evolved","Don't Starve","Don't Starve Together","Rust","Sea of Thieves","No Man's Sky","Star Wars Jedi: Fallen Order","Borderlands 3","Borderlands 2","Borderlands","Mafia: Definitive Edition","Mafia II","Mafia III","Dead Space","Dead Space 2","Dead Space 3","Resident Evil 2","Resident Evil 3","Resident Evil 4","Resident Evil 7","Resident Evil Village","Silent Hill 2","Silent Hill 3","Silent Hill 4","Tomb Raider","Rise of the Tomb Raider","Shadow of the Tomb Raider","Prince of Persia: The Sands of Time","Prince of Persia: Warrior Within","Prince of Persia: The Two Thrones","God of War","God of War II","God of War III","God of War (2018)","Horizon Zero Dawn","Horizon Forbidden West","Sekiro: Shadows Die Twice","Nioh","Nioh 2","Dark Souls","Dark Souls II","Dark Souls III","Demon's Souls","Bloodborne","Monster Hunter Rise","Fire Emblem: Three Houses","Animal Crossing: Pocket Camp","Pokémon GO","Pokémon Sword","Pokémon Shield","Pokémon Brilliant Diamond","Pokémon Shining Pearl","Pokémon Legends: Arceus","Pokémon Scarlet","Pokémon Violet","Candy Crush Saga","Clash of Clans","Clash Royale","Brawl Stars","Mobile Legends","Subway Surfers","Temple Run","Angry Birds","Fruit Ninja","Beat Saber","Super Mario Odyssey","Super Mario Galaxy","Super Mario 64","Super Mario Sunshine","Mario Kart 8 Deluxe","Mario Kart Wii","Mario Kart 7","Mario Party","Luigi’s Mansion 3","Splatoon 2","Splatoon 3","Metroid Dread","Metroid Prime","Metroid Prime 2","Metroid Prime 3","Metroid Fusion","Donkey Kong Country: Tropical Freeze","Donkey Kong Country Returns","Kirby Star Allies","Kirby’s Epic Yarn","Star Fox 64","Star Fox Adventures","Star Fox Zero","F-Zero GX","Pikmin","Pikmin 2","Pikmin 3","Pikmin 4","Animal Crossing: City Folk","Animal Crossing: Wild World","Animal Crossing: New Leaf","Fire Emblem: Awakening","Fire Emblem Fates","Fire Emblem Echoes","Super Smash Bros Ultimate","Super Smash Bros Melee","Super Smash Bros Brawl","Super Smash Bros for 3DS/Wii U","Tekken 7","Tekken 6","Street Fighter V","Street Fighter IV","Street Fighter III","Mortal Kombat 11","Mortal Kombat X","Mortal Kombat 9","Injustice 2","Injustice: Gods Among Us","Soulcalibur VI","Soulcalibur V","Guilty Gear Strive","Gran Turismo 7","Gran Turismo 6","Gran Turismo 5","Forza Horizon 5","Forza Horizon 4","Forza Motorsport 7","Forza Motorsport 6","NBA 2K23","NBA 2K22","NBA 2K21","NBA 2K20","FIFA 22","FIFA 21","FIFA 20","FIFA 19","Madden NFL 23","Madden NFL 22","Madden NFL 21","Madden NFL 20"
-];
+        const picks = [
+            { name: "GTA 5", logo: "https://logos-world.net/wp-content/uploads/2021/02/GTA-5-Symbol.png" },
+            { name: "Minecraft", logo: "https://logos-world.net/wp-content/uploads/2020/04/Minecraft-Logo.png" },
+            { name: "Roblox", logo: "https://archive.org/download/app-icon-roblox/app-icon-roblox.png" },
+            { name: "Fifa 25", logo: "https://www.fifaultimateteam.it/wp-content/uploads/2024/07/cover-logo-black-fc-25.webp" },
+            { name: "War Thunder", logo: "https://www.vhv.rs/dpng/f/390-3904724_war-thunder-png.png" },
+            { name: "Geometry Dash", logo: "https://logos-world.net/wp-content/uploads/2022/05/Geometry-Dash-Logo.png" },
+            { name: "Among Us", logo: "https://logodix.com/logo/2207096.png" },
+            { name: "Mario Kart", logo: "https://logos-world.net/wp-content/uploads/2024/02/Mario-Kart-Logo-2005.png" },
+            { name: "Kingdom Hearts 3", logo: "https://purepng.com/public/uploads/large/purepng.com-kingdom-hearts-3-logokingdom-heartsgamefantasythreesquare-enixdisney-21528619495uvx4u.png" },
+            { name: "Super Smash Bros", logo: "https://logos-world.net/wp-content/uploads/2022/01/Super-Smash-Bros.-Logo-2014.png" }
+        ];
 
-// Sort alphabetically
-allGames.sort((a,b)=>a.localeCompare(b));
+        /* -------------------------------
+           YOUR FULL SEARCHABLE GAME LIST
+        --------------------------------*/
+        const allGames = [
+            "Minecraft","Roblox","GTA V","Fifa 25","War Thunder","Geometry Dash","Among Us","Mario Kart",
+            "Kingdom Hearts 3","Super Smash Bros","Fortnite","Call of Duty: Warzone","Apex Legends",
+            "The Sims 4","Stardew Valley","Animal Crossing: New Horizons","Terraria","League of Legends",
+            "Valorant","Overwatch","PUBG","FIFA 23","Rocket League","Genshin Impact",
+            "The Witcher 3: Wild Hunt","Red Dead Redemption 2","Assassin's Creed Valhalla",
+            "Cyberpunk 2077","Fall Guys","Dead by Daylight","Phasmophobia","Subnautica","Baldur's Gate 3",
+            "Diablo IV","Diablo II","World of Warcraft","Hearthstone","Dota 2",
+            "Counter-Strike: Global Offensive","Team Fortress 2","Skyrim","Fallout 4","Fallout: New Vegas",
+            "Black Desert Online","Destiny 2","Monster Hunter: World","Elden Ring","Hollow Knight",
+            "Cuphead","Hades","Celeste","Ori and the Will of the Wisps","Undertale","Ark: Survival Evolved",
+            "Don't Starve","Don't Starve Together","Rust","Sea of Thieves","No Man's Sky",
+            "Star Wars Jedi: Fallen Order","Borderlands 3","Borderlands 2","Borderlands","Mafia: Definitive Edition",
+            "Mafia II","Mafia III","Dead Space","Dead Space 2","Dead Space 3","Resident Evil 2",
+            "Resident Evil 3","Resident Evil 4","Resident Evil 7","Resident Evil Village","Silent Hill 2",
+            "Silent Hill 3","Silent Hill 4","Tomb Raider","Rise of the Tomb Raider","Shadow of the Tomb Raider",
+            "Prince of Persia: The Sands of Time","Prince of Persia: Warrior Within","Prince of Persia: The Two Thrones",
+            "God of War","God of War II","God of War III","God of War (2018)","Horizon Zero Dawn",
+            "Horizon Forbidden West","Sekiro: Shadows Die Twice","Nioh","Nioh 2","Dark Souls","Dark Souls II",
+            "Dark Souls III","Demon's Souls","Bloodborne","Monster Hunter Rise","Fire Emblem: Three Houses",
+            "Animal Crossing: Pocket Camp","Pokémon GO","Pokémon Sword","Pokémon Shield",
+            "Pokémon Brilliant Diamond","Pokémon Shining Pearl","Pokémon Legends: Arceus","Pokémon Scarlet",
+            "Pokémon Violet","Candy Crush Saga","Clash of Clans","Clash Royale","Brawl Stars","Mobile Legends",
+            "Subway Surfers","Temple Run","Angry Birds","Fruit Ninja","Beat Saber","Super Mario Odyssey",
+            "Super Mario Galaxy","Super Mario 64","Super Mario Sunshine","Mario Kart 8 Deluxe","Mario Kart Wii",
+            "Mario Kart 7","Mario Party","Luigi’s Mansion 3","Splatoon 2","Splatoon 3","Metroid Dread",
+            "Metroid Prime","Metroid Prime 2","Metroid Prime 3","Metroid Fusion","Donkey Kong Country: Tropical Freeze",
+            "Donkey Kong Country Returns","Kirby Star Allies","Kirby’s Epic Yarn","Star Fox 64","Star Fox Adventures",
+            "Star Fox Zero","F-Zero GX","Pikmin","Pikmin 2","Pikmin 3","Pikmin 4","Animal Crossing: City Folk",
+            "Animal Crossing: Wild World","Animal Crossing: New Leaf","Fire Emblem: Awakening","Fire Emblem Fates",
+            "Fire Emblem Echoes","Super Smash Bros Ultimate","Super Smash Bros Melee","Super Smash Bros Brawl",
+            "Super Smash Bros for 3DS/Wii U","Tekken 7","Tekken 6","Street Fighter V","Street Fighter IV",
+            "Street Fighter III","Mortal Kombat 11","Mortal Kombat X","Mortal Kombat 9","Injustice 2",
+            "Injustice: Gods Among Us","Soulcalibur VI","Soulcalibur V","Guilty Gear Strive","Gran Turismo 7",
+            "Gran Turismo 6","Gran Turismo 5","Forza Horizon 5","Forza Horizon 4","Forza Motorsport 7",
+            "Forza Motorsport 6","NBA 2K23","NBA 2K22","NBA 2K21","NBA 2K20","FIFA 22","FIFA 21","FIFA 20",
+            "FIFA 19","Madden NFL 23","Madden NFL 22","Madden NFL 21","Madden NFL 20",
+            "The Legend of Zelda: Breath of the Wild","The Legend of Zelda: Tears of the Kingdom",
+            "The Legend of Zelda: Skyward Sword","The Legend of Zelda: Twilight Princess",
+            "The Legend of Zelda: Ocarina of Time","The Legend of Zelda: Majora’s Mask",
+            "The Legend of Zelda: Wind Waker","The Legend of Zelda: Link’s Awakening",
+            "The Legend of Zelda: Phantom Hourglass","The Legend of Zelda: Spirit Tracks",
+            "Pokémon Red","Pokémon Blue","Pokémon Yellow","Drift Legends","Tetris","Super Mario World",
+            "Super Metroid","Portal 2","Final Fantasy VII","Half-Life 2","The Last of Us","Metal Gear Solid",
+            "Doom","BioShock","Mass Effect 2","Street Fighter II","Grand Theft Auto: San Andreas",
+            "Halo: Combat Evolved","The Elder Scrolls IV: Oblivion","Batman: Arkham City","Super Mario Galaxy 2",
+            "Journey","Dragon Age: Origins","Mega Man 2","Persona 5","Uncharted 2: Among Thieves","Halo 3",
+            "Metal Gear Solid 3: Snake Eater","Shadow of the Colossus","Red Dead Redemption","GoldenEye 007",
+            "Half-Life","Perfect Dark","Civilization IV","SimCity","Dishonored 2","NieR: Automata",
+            "Grand Theft Auto IV","Outer Wilds","Left 4 Dead 2",
+            "The Legend of Zelda: A Link to the Past","Mega Man X",
+            "Super Street Fighter II Turbo","Star Wars: Knights of the Old Republic",
+            "Tony Hawk's Pro Skater 2","The Orange Box","The Walking Dead: Episode 5 - No Time Left",
+            "Tony Hawk's Pro Skater 3","Mass Effect Legendary Edition","Far Cry 6","Back 4 Blood",
+            "Little Devil Inside","Tom Clancy's The Division 2","Judgment","NieR: Replicant",
+            "World of Tanks","Bravely Default II","Crossfire","Disco Elysium: The Final Cut",
+            "It Takes Two","God of War (2005)","Madden NFL 2002","Madden NFL 2003","Madden NFL 2004",
+            "Ninja Gaiden Black","Halo 2","Metal Gear Solid 2: Sons of Liberty",
+            "Metal Gear Solid 4: Guns of the Patriots",
+            "Super Mario Advance 4: Super Mario Bros. 3","Wipeout XL","World of Goo",
+            "Batman: Arkham Asylum","System Shock 2","Deus Ex","Tetris Effect","Bejeweled","Pac-Man",
+            "Pong","Space Invaders","Donkey Kong","Mortal Kombat","Sonic the Hedgehog","Spacewar!",
+            "John Madden Football","Wolfenstein 3D","Quake","StarCraft","SimCity 2000","Terranigma",
+            "Chrono Trigger","Bloodstained: Ritual of the Night","Hollow Knight: Silksong","Slay the Spire",
+            "Katana ZERO","The Binding of Isaac: Rebirth","Dead Cells","Shovel Knight","Oxenfree",
+            "Hyper Light Drifter","Horizon Chase Turbo","Darkest Dungeon","Gris","Little Nightmares",
+            "Little Nightmares II","Spiritfarer","Streets of Rage 4","Forager","Moonlighter",
+            "Rogue Legacy","Enter the Gungeon","A Short Hike","Carrion","Risk of Rain 2","Valheim",
+            "Noita","Spirit of the North","Tunic","Sifu","The Artful Escape",
+            "Teenage Mutant Ninja Turtles: Shredder's Revenge","Eastward","Axiom Verge",
+            "Axiom Verge 2","Ender Lilies: Quietus of the Knights","Loop Hero","Inscryption",
+            "Chicory: A Colorful Tale","Tales of Arise","Triangle Strategy","Fire Emblem Engage",
+            "Xenoblade Chronicles 3","Bayonetta 3","Astral Chain",
+            "Danganronpa: Trigger Happy Havoc","Danganronpa 2: Goodbye Despair",
+            "Danganronpa V3: Killing Harmony","Phoenix Wright: Ace Attorney Trilogy",
+            "Ace Attorney Investigations: Miles Edgeworth",
+            "Professor Layton and the Curious Village",
+            "Professor Layton and the Diabolical Box",
+            "Professor Layton and the Unwound Future","Etrian Odyssey Nexus",
+            "Bravely Second: End Layer","Dragon Quest XI","Dragon Quest Builders 2",
+            "Octopath Traveler","Yakuza 0","Yakuza Kiwami","Yakuza Kiwami 2",
+            "Yakuza: Like a Dragon","Lost Judgment","Shenmue I & II","Shenmue III","F1 22","F1 23",
+            "WRC 10","Gran Turismo Sport","Forza Motorsport 8","Tony Hawk's Pro Skater 1+2",
+            "Skater XL","Bully: Scholarship Edition",
+            "Vampire: The Masquerade – Bloodlines","The Witcher 2: Assassins of Kings",
+            "The Witcher","Divinity: Original Sin II","Divinity: Original Sin",
+            "Path of Exile","Torchlight II","Torchlight III","Borderlands: The Pre-Sequel",
+            "Borderlands: Game of the Year Edition","Gothic II","Gothic 3","Risen","Risen 2: Dark Waters",
+            "Risen 3: Titan Lords","Two Point Hospital","Planet Zoo","Planet Coaster",
+            "Jurassic World Evolution","Farming Simulator 22","Farming Simulator 19",
+            "Factorio","Satisfactory","Cities: Skylines","Tropico 6","Tropico 5",
+            "Anno 1800","Anno 2205","Anno 2070","Marvel’s Spider-Man",
+            "Marvel’s Spider-Man: Miles Morales","Marvel’s Spider-Man 2",
+            "Ghost of Tsushima","Ghost of Tsushima: Director’s Cut","Days Gone",
+            "Ratchet & Clank (2016)","Ratchet & Clank: Rift Apart","Returnal",
+            "Demon’s Souls (Remake)","Dark Souls Remastered",
+            "Bloodborne: The Old Hunters","Eternal Darkness: Sanity’s Requiem",
+            "Metroid Prime Remastered","Donkey Kong 64","Banjo-Kazooie","Banjo-Tooie",
+            "Golden Sun","Golden Sun: The Lost Age","Advance Wars","Advance Wars 2: Black Hole Rising",
+            "Fire Emblem: Path of Radiance","Fire Emblem: Radiant Dawn",
+            "Super Mario RPG: Legend of the Seven Stars","Paper Mario",
+            "Paper Mario: The Thousand-Year Door","Mario & Luigi: Superstar Saga",
+            "Mario & Luigi: Partners in Time","Mario & Luigi: Bowser’s Inside Story",
+            "Luigi’s Mansion","Luigi’s Mansion: Dark Moon","Luigi’s Mansion 2",
+            "Kid Icarus: Uprising","Punch-Out!! (Wii)","Punch-Out!! (NES)","F-Zero (SNES)",
+            "F-Zero: Maximum Velocity","Wave Race 64","Excitebike 64","Ice Climber",
+            "Kirby’s Dream Land","Kirby’s Dream Land 2","Kirby Super Star",
+            "Kirby 64: The Crystal Shards"
+        ];
 
-// --- Build a card ---
-function createCard(name, logo=null) {
-  const card = document.createElement("div");
-  card.className = "game-card";
-  const id = name.replace(/\s+/g,"");
+        allGames.sort((a, b) => a.localeCompare(b));
 
-  card.innerHTML = `
-    <h3>${logo ? `<img src="${logo}" />` : ""}${name}</h3>
-    <div class="avg-stars" id="avg-${id}"></div>
-    <div class="rating" id="rate-${id}"></div>
-  `;
+        function createCard(name, logo = null) {
+            const card = document.createElement("div");
+            card.className = "game-card";
+            const id = name.replace(/\s+/g, '');
 
-  const ratingDiv = card.querySelector(`#rate-${id}`);
+            card.innerHTML = `
+                <h3>${logo ? `<img src="${logo}" alt="${name} logo">` : ""}${name}</h3>
+                <div class="avg-stars" id="avg-${id}">Loading...</div>
+                <div class="rating" id="rate-${id}"></div>
+            `;
 
-  if (!votedLocal[name]) {
-    for (let i=1;i<=10;i++) {
-      const s = document.createElement("span");
-      s.className="star";
-      s.textContent="★";
-      s.dataset.value=i;
-      s.onclick = async () => {
-        if (votedLocal[name]) return;
-        votedLocal[name] = true;
-        saveLocal();
-        const gameRef = ref(db,"ratings/"+name);
-        try {
-          await runTransaction(gameRef,current=>{
-            if (!current) return {avg:i,count:1};
-            const newCount = (current.count||0)+1;
-            const currentAvg = parseFloat(current.avg||0);
-            const newAvg = ((currentAvg*(current.count||0))+i)/newCount;
-            return {avg:newAvg,count:newCount};
-          });
-        } catch(err){console.error(err);}
-        render();
-      };
-      ratingDiv.appendChild(s);
-    }
-  }
+            const ratingDiv = card.querySelector(`#rate-${id}`);
 
-  const avgDiv = card.querySelector(`#avg-${id}`);
-  const gameRef = ref(db,"ratings/"+name);
-  try { off(gameRef); } catch(e){}
-  onValue(gameRef,(snap)=>{
-    if (!snap.exists()) {
-      avgDiv.textContent="No ratings yet";
-      return;
-    }
-    const data = snap.val();
-    const avg = parseFloat(data.avg||0);
-    const count = data.count||0;
-    let stars="";
-    for (let j=1;j<=10;j++){
-      stars+=`<span class="star avg" style="color:${j<=avg?"gold":"#ccc"}">★</span>`;
-    }
-    avgDiv.innerHTML=`${stars} <strong>${avg.toFixed(1)}</strong>/10 (${count} vote${count===1?"":"s"})`;
-  });
+            if (!votedLocal[name]) {
+                for (let i = 1; i <= 10; i++) {
+                    const s = document.createElement("span");
+                    s.className = "star";
+                    s.textContent = "★";
+                    s.dataset.value = i;
 
-  return card;
-}
+                    s.onclick = async () => {
+                        if (votedLocal[name]) return;
 
-// --- Render ---
-function render() {
-  const searchQuery = document.getElementById("search").value.toLowerCase();
-  const searchContainer = document.getElementById("search-results");
-  searchContainer.innerHTML="";
-  if(searchQuery){
-    const matched = allGames.filter(g=>g.toLowerCase().includes(searchQuery));
-    if(matched.length>0){
-      matched.forEach(name=>{
-        const pickObj = picks.find(p=>p.name===name);
-        const logo = pickObj ? pickObj.logo : null;
-        searchContainer.appendChild(createCard(name,logo));
-      });
-    }
-  }
+                        votedLocal[name] = true;
+                        saveLocal();
 
-  const picksContainer = document.getElementById("picks");
-  picksContainer.innerHTML="<h2>PlayRank Games Picks</h2>";
-  picks.forEach(p=>picksContainer.appendChild(createCard(p.name,p.logo)));
-}
+                        const gameRef = ref(db, "ratings/" + name);
 
-document.getElementById("search").addEventListener("input",render);
-window.addEventListener("DOMContentLoaded",render);
+                        await runTransaction(gameRef, current => {
+                            if (!current) return { avg: i, count: 1 };
+                            const newCount = (current.count || 0) + 1;
+                            const newAvg = ((current.avg * current.count) + i) / newCount;
+                            return { avg: newAvg, count: newCount };
+                        });
 
-</script>
+                        render();
+                    };
+
+                    ratingDiv.appendChild(s);
+                }
+            }
+
+            const avgDiv = card.querySelector(`#avg-${id}`);
+            const gameRef = ref(db, "ratings/" + name);
+
+            onValue(gameRef, snap => {
+                if (!snap.exists()) {
+                    avgDiv.textContent = "No ratings yet";
+                    return;
+                }
+
+                const data = snap.val();
+                const avg = parseFloat(data.avg || 0);
+                const count = data.count || 0;
+
+                let stars = "";
+                for (let j = 1; j <= 10; j++) {
+                    stars += `<span class="star avg" style="color:${j <= avg ? "gold" : "#444"}">★</span>`;
+                }
+
+                avgDiv.innerHTML = `
+                    ${stars}
+                    <strong>${avg.toFixed(1)}</strong>/10 (${count} vote${count === 1 ? "" : "s"})
+                `;
+            });
+
+            return card;
+        }
+
+        function render() {
+            const query = document.getElementById("search").value.toLowerCase().trim();
+            const results = document.getElementById("search-results");
+
+            results.innerHTML = "";
+            if (query) {
+                const match = allGames.filter(g => g.toLowerCase().includes(query));
+                match.forEach(name => results.appendChild(createCard(name)));
+            }
+
+            const picksList = document.getElementById("picks-list");
+            picksList.innerHTML = "";
+
+            picks.forEach(p => picksList.appendChild(createCard(p.name, p.logo)));
+        }
+
+        document.getElementById("search").addEventListener("input", render);
+        window.addEventListener("DOMContentLoaded", render);
+    </script>
+
 </body>
 </html>
